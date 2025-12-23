@@ -1,0 +1,21 @@
+# Universal Email Agent v5 Dependencies
+
+# Core automation and web scraping
+playwright>=1.40.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# HTTP client
+httpx>=0.25.0
+
+# DNS validation
+dnspython>=2.4.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Async support (usually included with Python 3.7+)
+asyncio>=3.4.3
+
+# Additional utilities (for batch processing)
+pandas>=2.0.0
