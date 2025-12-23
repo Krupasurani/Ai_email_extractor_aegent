@@ -20,10 +20,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # ----------------------------------------------------------
 # 🔧 GLOBAL CONFIG
 # ----------------------------------------------------------
-SMART_SCRIPT = "smart_email_finder.py"
+SMART_SCRIPT = "universal_email_agent_v5.py"  # Updated to use new email agent
 OUTPUT_FILE = "batch_results_final.csv"
 MAX_WORKERS = 3
-TIMEOUT = 90  # seconds per case
+TIMEOUT = 120  # seconds per case (increased for new agent)
 
 HEADERS = [
     "timestamp", "url", "person", "email_found",
