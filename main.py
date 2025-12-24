@@ -2217,7 +2217,7 @@ load_dotenv()
 try:
     from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
     from groq import Groq
-    from duckduckgo_search import DDGS
+    from ddgs import DDGS
     import requests
     from bs4 import BeautifulSoup
     from email_validator import validate_email, EmailNotValidError
