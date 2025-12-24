@@ -19,7 +19,12 @@ python-dotenv>=1.0.0
 groq>=0.4.0
 
 # Search
-duckduckgo-search>=3.9.0
+ddgs>=9.0.0
 
 # Data processing
 pandas>=2.0.0
+
+# Additional dependencies for main.py
+crawl4ai>=0.7.0
+email-validator>=2.0.0
+openpyxl>=3.0.0
