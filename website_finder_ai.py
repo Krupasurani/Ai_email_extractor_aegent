@@ -1107,7 +1107,7 @@ from typing import List, Dict, Any
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 from dotenv import load_dotenv
 
 try:

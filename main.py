@@ -2206,7 +2206,8 @@ from dataclasses import dataclass, asdict
 from urllib.parse import urljoin, urlparse
 from dotenv import load_dotenv
 from website_finder_ai import find_official_website
-from email_extraction_stage import find_email_from_site
+# Updated to use Universal Email Agent v5
+from universal_email_agent_v5 import UniversalEmailAgent
 import concurrent.futures
 import logging
 
@@ -2216,7 +2217,7 @@ load_dotenv()
 try:
     from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
     from groq import Groq
-    from ddgs import DDGS
+    from duckduckgo_search import DDGS
     import requests
     from bs4 import BeautifulSoup
     from email_validator import validate_email, EmailNotValidError
@@ -3340,33 +3341,37 @@ Return UP TO 2 professionals. If none found, return empty array."""
     # ---------------------------------------------------------------------------
     async def external_email_extractor(self, homepage_url: str, person_name: str) -> dict:
         """
-        Run the synchronous email_extraction_stage.find_email_from_site()
-        safely inside a background thread to avoid Playwright async conflicts.
+        Run Universal Email Agent v5 to extract email from website.
+        This replaces the old email_extraction_stage.find_email_from_site()
         """
         try:
-            loop = asyncio.get_running_loop()
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                results = await loop.run_in_executor(
-                    pool,
-                    lambda: find_email_from_site(homepage_url, person_name)
-                )
+            logger.info(f"   🤖 Running Universal Email Agent v5 for: {person_name}")
 
-            if not results:
+            # Create and run the Universal Email Agent
+            agent = UniversalEmailAgent(homepage_url, person_name)
+            result = await agent.run()
+
+            if not result or not result.get('email'):
+                logger.warning(f"   ⚠️ No email found for: {person_name}")
                 return {'email': None}
 
-            best = sorted(results, key=lambda r: r.get('confidence', 0), reverse=True)[0]
+            # Map the result to the expected format
+            email_type = 'firm_general' if result.get('is_general_contact') else 'professional'
 
             return {
-                'email': best.get('email'),
-                'source_url': best.get('url', homepage_url),
-                'confidence': best.get('confidence', 0.8),
-                'context': best.get('context', '')[:250],
-                'validation_method': 'external_import',
-                'type': 'professional'
+                'email': result.get('email'),
+                'source_url': result.get('profile_url', homepage_url),
+                'confidence': result.get('confidence', 80) / 100.0,  # Convert to 0-1 scale
+                'context': f"Found via Universal Email Agent v5",
+                'validation_method': 'UniversalEmailAgentV5',
+                'type': email_type,
+                'is_general_contact': result.get('is_general_contact', False)
             }
 
         except Exception as e:
-            logger.error(f"❌ External extractor failed: {e}")
+            logger.error(f"❌ Universal Email Agent failed: {e}")
+            import traceback
+            traceback.print_exc()
             return {'email': None}
 
     # ============================================================================
@@ -3890,9 +3895,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-import sys
-sys.path.append(r"D:\invtree\final")
-from email_extraction_stage import find_email_from_site
-
-# print(find_email_from_site("https://www.finnegan.com", "Anthony J. Lombardi"))
