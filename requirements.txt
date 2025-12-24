@@ -1,4 +1,4 @@
-# Universal Email Agent v5 Dependencies
+# Complete Email Extraction System Dependencies
 
 # Core automation and web scraping
 playwright>=1.40.0
@@ -7,6 +7,7 @@ lxml>=4.9.0
 
 # HTTP client
 httpx>=0.25.0
+requests>=2.31.0
 
 # DNS validation
 dnspython>=2.4.0
@@ -14,8 +15,11 @@ dnspython>=2.4.0
 # Environment variables
 python-dotenv>=1.0.0
 
-# Async support (usually included with Python 3.7+)
-asyncio>=3.4.3
+# AI/LLM
+groq>=0.4.0
 
-# Additional utilities (for batch processing)
+# Search
+duckduckgo-search>=3.9.0
+
+# Data processing
 pandas>=2.0.0
